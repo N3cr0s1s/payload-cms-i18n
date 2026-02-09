@@ -15,9 +15,29 @@ import { draftMode } from 'next/headers'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
+import { hasLocale } from 'next-intl'
+import { routing } from '@/i18n/routing'
+import { notFound } from 'next/navigation'
+import { setRequestLocale } from 'next-intl/server'
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
+
+interface Props {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}
+
+export default async function RootLayout({ children, params }: Props) {
   const { isEnabled } = await draftMode()
+  const { locale } = await params;
+
+  if (!hasLocale(routing.locales, locale)) {
+    notFound()
+  }
+
+  setRequestLocale(locale)
 
   return (
     <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
