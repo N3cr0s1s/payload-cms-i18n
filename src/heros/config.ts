@@ -52,6 +52,7 @@ export const hero: Field = {
         },
       }),
       label: false,
+      localized: true,
     },
     linkGroup({
       overrides: {
@@ -66,6 +67,7 @@ export const hero: Field = {
       },
       relationTo: 'media',
       required: true,
+      localized: true,
     },
   ],
   label: false,

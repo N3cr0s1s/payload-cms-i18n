@@ -1,6 +1,6 @@
 import { Button, type ButtonProps } from '@/components/ui/button'
 import { cn } from '@/utilities/ui'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import React from 'react'
 
 import type { Page, Post } from '@/payload-types'
@@ -42,11 +42,20 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   if (!href) return null
 
+  const isExternal = /^(https?:|mailto:|tel:)/.test(href)
   const size = appearance === 'link' ? 'clear' : sizeFromProps
   const newTabProps = newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
 
-  /* Ensure we don't break any styles set by richText */
   if (appearance === 'inline') {
+    if (isExternal) {
+      return (
+        <a className={cn(className)} href={href} {...newTabProps}>
+          {label && label}
+          {children && children}
+        </a>
+      )
+    }
+
     return (
       <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
         {label && label}
@@ -57,10 +66,17 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   return (
     <Button asChild className={className} size={size} variant={appearance}>
-      <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
-        {label && label}
-        {children && children}
-      </Link>
+      {isExternal ? (
+        <a className={cn(className)} href={href} {...newTabProps}>
+          {label && label}
+          {children && children}
+        </a>
+      ) : (
+        <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
+          {label && label}
+          {children && children}
+        </Link>
+      )}
     </Button>
   )
 }

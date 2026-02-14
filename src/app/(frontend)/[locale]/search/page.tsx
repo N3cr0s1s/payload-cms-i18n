@@ -4,6 +4,7 @@ import { CollectionArchive } from '@/components/CollectionArchive'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
+import { getLocale } from '@/utilities/getLocale'
 import { Search } from '@/search/Component'
 import PageClient from './page.client'
 import { CardPostData } from '@/components/Card'
@@ -15,9 +16,11 @@ type Args = {
 }
 export default async function Page({ searchParams: searchParamsPromise }: Args) {
   const { q: query } = await searchParamsPromise
+  const locale = await getLocale()
   const payload = await getPayload({ config: configPromise })
 
   const posts = await payload.find({
+    locale,
     collection: 'search',
     depth: 1,
     limit: 12,

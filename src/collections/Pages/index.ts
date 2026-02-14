@@ -20,6 +20,7 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
+import { Locale } from '@/types'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -39,18 +40,20 @@ export const Pages: CollectionConfig<'pages'> = {
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
-      url: ({ data, req }) =>
+      url: ({ data, req, locale }) =>
         generatePreviewPath({
           slug: data?.slug,
           collection: 'pages',
           req,
+          locale: locale.code as Locale,
         }),
     },
-    preview: (data, { req }) =>
+    preview: (data, { req, locale }) =>
       generatePreviewPath({
         slug: data?.slug as string,
         collection: 'pages',
         req,
+        locale: locale as Locale,
       }),
     useAsTitle: 'title',
   },
@@ -59,6 +62,7 @@ export const Pages: CollectionConfig<'pages'> = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       type: 'tabs',
@@ -77,6 +81,7 @@ export const Pages: CollectionConfig<'pages'> = {
               admin: {
                 initCollapsed: true,
               },
+              localized: true,
             },
           ],
           label: 'Content',
@@ -84,6 +89,7 @@ export const Pages: CollectionConfig<'pages'> = {
         {
           name: 'meta',
           label: 'SEO',
+          localized: true,
           fields: [
             OverviewField({
               titlePath: 'meta.title',
@@ -127,7 +133,7 @@ export const Pages: CollectionConfig<'pages'> = {
   versions: {
     drafts: {
       autosave: {
-        interval: 100, // We set this interval for optimal live preview
+        interval: 2000, // Less aggressive autosave to avoid overwriting recent edits
       },
       schedulePublish: true,
     },

@@ -26,6 +26,7 @@ import {
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { slugField } from 'payload'
+import { Locale } from '@/types'
 
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
@@ -50,18 +51,20 @@ export const Posts: CollectionConfig<'posts'> = {
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
-      url: ({ data, req }) =>
+      url: ({ data, req, locale }) =>
         generatePreviewPath({
           slug: data?.slug,
           collection: 'posts',
           req,
+          locale: locale.code as Locale
         }),
     },
-    preview: (data, { req }) =>
+    preview: (data, { req, locale }) =>
       generatePreviewPath({
         slug: data?.slug as string,
         collection: 'posts',
         req,
+        locale: locale as Locale
       }),
     useAsTitle: 'title',
   },
@@ -224,7 +227,7 @@ export const Posts: CollectionConfig<'posts'> = {
   versions: {
     drafts: {
       autosave: {
-        interval: 100, // We set this interval for optimal live preview
+        interval: 2000, // Less aggressive autosave to avoid overwriting recent edits
       },
       schedulePublish: true,
     },

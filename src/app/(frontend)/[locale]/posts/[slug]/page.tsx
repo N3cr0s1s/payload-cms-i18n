@@ -14,6 +14,7 @@ import { PostHero } from '@/heros/PostHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { getLocale } from '@/utilities/getLocale'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -89,9 +90,11 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()
 
+  const locale = await getLocale()
   const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({
+    locale: locale as "hu" | "en",
     collection: 'posts',
     draft,
     limit: 1,

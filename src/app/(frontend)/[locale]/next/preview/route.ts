@@ -12,6 +12,7 @@ export async function GET(req: NextRequest): Promise<Response> {
 
   const { searchParams } = new URL(req.url)
 
+  const locale = searchParams.get('locale') || 'hu'
   const path = searchParams.get('path')
   const collection = searchParams.get('collection') as CollectionSlug
   const slug = searchParams.get('slug')
@@ -52,5 +53,6 @@ export async function GET(req: NextRequest): Promise<Response> {
 
   draft.enable()
 
-  redirect(path)
+  const finalPath = `/${locale}${path}`
+  redirect(finalPath)
 }
