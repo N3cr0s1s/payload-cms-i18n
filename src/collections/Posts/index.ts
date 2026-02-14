@@ -56,7 +56,7 @@ export const Posts: CollectionConfig<'posts'> = {
           slug: data?.slug,
           collection: 'posts',
           req,
-          locale: locale.code as Locale
+          locale: locale.code as Locale,
         }),
     },
     preview: (data, { req, locale }) =>
@@ -64,7 +64,7 @@ export const Posts: CollectionConfig<'posts'> = {
         slug: data?.slug as string,
         collection: 'posts',
         req,
-        locale: locale as Locale
+        locale: locale as Locale,
       }),
     useAsTitle: 'title',
   },
@@ -73,16 +73,19 @@ export const Posts: CollectionConfig<'posts'> = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       type: 'tabs',
       tabs: [
         {
+          label: 'Content',
           fields: [
             {
               name: 'heroImage',
               type: 'upload',
               relationTo: 'media',
+              localized: true,
             },
             {
               name: 'content',
@@ -101,11 +104,12 @@ export const Posts: CollectionConfig<'posts'> = {
               }),
               label: false,
               required: true,
+              localized: true,
             },
           ],
-          label: 'Content',
         },
         {
+          label: 'Meta',
           fields: [
             {
               name: 'relatedPosts',
@@ -133,7 +137,6 @@ export const Posts: CollectionConfig<'posts'> = {
               relationTo: 'categories',
             },
           ],
-          label: 'Meta',
         },
         {
           name: 'meta',
@@ -161,6 +164,7 @@ export const Posts: CollectionConfig<'posts'> = {
               descriptionPath: 'meta.description',
             }),
           ],
+          localized: true,
         },
       ],
     },
