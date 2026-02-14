@@ -13,7 +13,7 @@ export function isObject(item: unknown): item is object {
 /**
  * Deep merge two objects.
  * @param target
- * @param ...sources
+ * @param source
  */
 export default function deepMerge<T, R>(target: T, source: R): T {
   const output = { ...target }

@@ -11,8 +11,8 @@ import React, { useState } from 'react'
 
 import type { Theme } from './types'
 
-import { useTheme } from '..'
 import { themeLocalStorageKey } from './types'
+import { useTheme } from '@/providers/Theme'
 
 export const ThemeSelector: React.FC = () => {
   const { setTheme } = useTheme()
