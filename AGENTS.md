@@ -21,13 +21,19 @@ You are an expert Payload CMS developer. When working with Payload projects, fol
 ```
 src/
 ├── app/
-│   ├── (frontend)/          # Frontend routes
+│   ├── (frontend)/
+│   │   └── [locale]/        # Locale-aware frontend routes
 │   └── (payload)/           # Payload admin routes
 ├── collections/             # Collection configs
 ├── globals/                 # Global configs
 ├── components/              # Custom React components
 ├── hooks/                   # Hook functions
 ├── access/                  # Access control functions
+├── i18n/                    # Internationalization config
+│   ├── routing.ts           # Route configuration
+│   ├── request.ts           # Request config
+│   └── navigation.ts        # Navigation helpers
+├── messages/                # UI translation files
 └── payload.config.ts        # Main config
 ```
 
@@ -61,6 +67,15 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URL,
   }),
+  // Localization (optional)
+  localization: {
+    locales: [
+      { label: 'Hungarian', code: 'hu' },
+      { label: 'English', code: 'en' },
+    ],
+    defaultLocale: 'hu',
+    fallback: true,
+  },
 })
 ```
 
@@ -407,6 +422,8 @@ const posts = await payload.find({
   depth: 2, // Populate relationships
   limit: 10,
   sort: '-createdAt',
+  locale: 'en', // Return content in specific locale
+  fallbackLocale: 'hu', // Fallback if translation missing
   select: {
     title: true,
     author: true,
@@ -418,6 +435,15 @@ const post = await payload.findByID({
   collection: 'posts',
   id: '123',
   depth: 2,
+  locale: 'hu',
+})
+
+// Fetch all locales at once
+const postAllLocales = await payload.findByID({
+  collection: 'posts',
+  id: '123',
+  locale: 'all',
+})
 })
 
 // Create
@@ -513,7 +539,10 @@ import config from '@payload-config'
 
 export default async function Page() {
   const payload = await getPayload({ config })
-  const { docs } = await payload.find({ collection: 'posts' })
+  const { docs } = await payload.find({
+    collection: 'posts',
+    locale: 'en', // Specify locale for localized content
+  })
 
   return <div>{docs.map(post => <h1 key={post.id}>{post.title}</h1>)}</div>
 }
@@ -1032,6 +1061,11 @@ export const myPlugin =
 8. **MongoDB Transactions**: Require replica set configuration
 9. **SQLite Transactions**: Disabled by default, enable with `transactionOptions: {}`
 10. **Point Fields**: Not supported in SQLite
+11. **Missing Locale**: Forgetting `locale` param in queries returns default locale content only
+12. **Wrong Link Import**: Using `next/link` instead of `@/i18n/navigation` bypasses locale prefixing
+8. **MongoDB Transactions**: Require replica set configuration
+9. **SQLite Transactions**: Disabled by default, enable with `transactionOptions: {}`
+10. **Point Fields**: Not supported in SQLite
 
 ## Additional Context Files
 
@@ -1131,6 +1165,16 @@ For deeper exploration of specific topics, refer to the context files located in
     - Using hooks
     - Performance best practices
     - Styling components
+
+14. **`i18n.md`** - Internationalization
+
+    - Payload CMS localization config
+    - Localized fields, tabs, and blocks
+    - next-intl frontend integration
+    - Routing and navigation helpers
+    - Querying localized content
+    - Sitemap generation with locales
+    - Best practices and common gotchas
 
 ## Resources
 

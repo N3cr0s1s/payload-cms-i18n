@@ -13,6 +13,7 @@ Core features:
 - [Pre-configured Payload Config](#how-it-works)
 - [Authentication](#users-authentication)
 - [Access Control](#access-control)
+- [Internationalization (i18n)](#internationalization-i18n)
 - [Layout Builder](#layout-builder)
 - [Draft Preview](#draft-preview)
 - [Live Preview](#live-preview)
@@ -97,6 +98,76 @@ Basic access control is setup to limit access to various content based based on 
 - `pages`: Everyone can access published pages, but only users can create, update, or delete them.
 
 For more details on how to extend this functionality, see the [Payload Access Control](https://payloadcms.com/docs/access-control/overview#access-control) docs.
+
+## Internationalization (i18n)
+
+This template includes full internationalization support using a dual approach:
+
+### Payload CMS Localization
+
+Content localization is handled by Payload's built-in localization feature. The following locales are configured:
+
+- **Hungarian (hu)** - Default locale
+- **English (en)**
+
+Localized fields store separate values for each language. Key localized content includes:
+- Page and post titles
+- Rich text content
+- SEO metadata
+- Layout blocks
+- Navigation items
+
+### next-intl Frontend Routing
+
+Frontend routing and UI translations are powered by [next-intl](https://next-intl.dev/). Features include:
+
+- **Locale-prefixed URLs** - Non-default locales use URL prefix (e.g., `/en/posts`)
+- **Automatic locale detection** - Routes are locale-aware without additional configuration
+- **Localized navigation** - Use `Link` from `@/i18n/navigation` instead of `next/link`
+- **Sitemap generation** - Automatic hreflang alternates for SEO
+
+### Project Structure
+
+```
+src/
+├── i18n/
+│   ├── routing.ts      # Route configuration (locales, default, prefix strategy)
+│   ├── request.ts      # Server request configuration
+│   └── navigation.ts   # Locale-aware Link, useRouter, etc.
+├── messages/
+│   ├── en.json         # English UI translations
+│   └── hu.json         # Hungarian UI translations
+└── app/(frontend)/
+    └── [locale]/       # All frontend routes are locale-aware
+```
+
+### Adding a New Locale
+
+1. Add the locale to `payload.config.ts`:
+   ```typescript
+   localization: {
+     locales: [
+       { label: 'Hungarian', code: 'hu' },
+       { label: 'English', code: 'en' },
+       { label: 'German', code: 'de' }, // New locale
+     ],
+     defaultLocale: 'hu',
+   }
+   ```
+
+2. Add the locale to `src/i18n/routing.ts`:
+   ```typescript
+   export const routing = defineRouting({
+     locales: ['hu', 'en', 'de'], // Add new locale
+     defaultLocale: 'hu',
+   })
+   ```
+
+3. Create the translation file `src/messages/de.json`
+
+4. Run `pnpm generate:types` to update TypeScript types
+
+For more details, see the [Payload Localization](https://payloadcms.com/docs/configuration/localization) and [next-intl](https://next-intl.dev/) docs.
 
 ## Layout Builder
 

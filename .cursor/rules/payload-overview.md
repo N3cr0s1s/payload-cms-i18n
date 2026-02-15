@@ -21,13 +21,21 @@ You are an expert Payload CMS developer. When working with Payload projects, fol
 ```
 src/
 ├── app/
-│   ├── (frontend)/          # Frontend routes
+│   ├── (frontend)/
+│   │   └── [locale]/        # Locale-aware frontend routes
 │   └── (payload)/           # Payload admin routes
 ├── collections/             # Collection configs
 ├── globals/                 # Global configs
 ├── components/              # Custom React components
 ├── hooks/                   # Hook functions
 ├── access/                  # Access control functions
+├── i18n/                    # Internationalization config
+│   ├── routing.ts           # Route configuration
+│   ├── request.ts           # Request config
+│   └── navigation.ts        # Navigation helpers
+├── messages/                # UI translation files
+│   ├── en.json
+│   └── hu.json
 └── payload.config.ts        # Main config
 ```
 
@@ -59,6 +67,15 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URL,
   }),
+  // Localization (optional)
+  localization: {
+    locales: [
+      { label: 'Hungarian', code: 'hu' },
+      { label: 'English', code: 'en' },
+    ],
+    defaultLocale: 'hu',
+    fallback: true,
+  },
 })
 ```
 
@@ -85,7 +102,10 @@ import config from '@payload-config'
 
 export default async function Page() {
   const payload = await getPayload({ config })
-  const { docs } = await payload.find({ collection: 'posts' })
+  const { docs } = await payload.find({
+    collection: 'posts',
+    locale: 'en', // Specify locale for localized content
+  })
 
   return <div>{docs.map(post => <h1 key={post.id}>{post.title}</h1>)}</div>
 }

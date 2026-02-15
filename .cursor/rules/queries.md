@@ -74,18 +74,27 @@ const posts = await payload.find({
   limit: 10,
   page: 1,
   sort: '-createdAt',
-  locale: 'en',
+  locale: 'en', // Return content in specific locale
+  fallbackLocale: 'hu', // Fallback if translation missing
   select: {
     title: true,
     author: true,
   },
 })
 
-// Find by ID
+// Fetch all locales at once
+const post = await payload.findByID({
+  collection: 'posts',
+  id: '123',
+  locale: 'all', // Returns all localized versions
+})
+
+// Find by ID with locale
 const post = await payload.findByID({
   collection: 'posts',
   id: '123',
   depth: 2,
+  locale: 'hu',
 })
 
 // Create
@@ -167,6 +176,8 @@ const queryString = stringify(
     where: query,
     depth: 2,
     limit: 10,
+    locale: 'en', // Specify locale
+    'fallback-locale': 'hu', // Optional fallback
   },
   { addQueryPrefix: true },
 )

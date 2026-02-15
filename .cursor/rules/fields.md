@@ -40,6 +40,86 @@ slugField({ fieldToUse: 'title' })
     afterRead: [({ siblingData }) => `${siblingData.firstName} ${siblingData.lastName}`],
   },
 }
+
+// Localized field - stores separate values per locale
+{
+  name: 'title',
+  type: 'text',
+  localized: true, // Different value per language
+}
+```
+
+## Localized Fields
+
+Fields marked with `localized: true` store separate values for each configured locale.
+
+### Field-Level Localization
+
+```typescript
+{
+  name: 'title',
+  type: 'text',
+  required: true,
+  localized: true, // Separate title per locale
+}
+
+{
+  name: 'content',
+  type: 'richText',
+  localized: true, // Separate content per locale
+}
+
+{
+  name: 'slug',
+  type: 'text',
+  // NOT localized - same slug across all locales
+}
+```
+
+### Tab-Level Localization
+
+Entire tabs can be localized:
+
+```typescript
+{
+  type: 'tabs',
+  tabs: [
+    {
+      name: 'meta',
+      label: 'SEO',
+      localized: true, // All fields in this tab are localized
+      fields: [
+        { name: 'title', type: 'text' },
+        { name: 'description', type: 'textarea' },
+      ],
+    },
+  ],
+}
+```
+
+### Block-Level Localization
+
+```typescript
+{
+  name: 'layout',
+  type: 'blocks',
+  blocks: [HeroBlock, ContentBlock],
+  localized: true, // Different block arrangements per locale
+}
+```
+
+### Array-Level Localization
+
+```typescript
+{
+  name: 'features',
+  type: 'array',
+  localized: true, // Different items per locale
+  fields: [
+    { name: 'title', type: 'text' },
+    { name: 'description', type: 'textarea' },
+  ],
+}
 ```
 
 ## Field Types

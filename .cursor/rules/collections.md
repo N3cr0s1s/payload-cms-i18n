@@ -18,9 +18,9 @@ export const Posts: CollectionConfig = {
     defaultColumns: ['title', 'author', 'status', 'createdAt'],
   },
   fields: [
-    { name: 'title', type: 'text', required: true },
+    { name: 'title', type: 'text', required: true, localized: true },
     { name: 'slug', type: 'text', unique: true, index: true },
-    { name: 'content', type: 'richText' },
+    { name: 'content', type: 'richText', localized: true },
     { name: 'author', type: 'relationship', relationTo: 'users' },
   ],
   timestamps: true,
@@ -154,6 +154,7 @@ export const Header: GlobalConfig = {
       name: 'nav',
       type: 'array',
       maxRows: 8,
+      localized: true, // Different navigation per locale
       fields: [
         {
           name: 'link',
@@ -163,9 +164,27 @@ export const Header: GlobalConfig = {
         {
           name: 'label',
           type: 'text',
+          localized: true,
         },
       ],
     },
   ],
 }
 ```
+
+### Querying Globals with Locale
+
+```typescript
+import { getLocale } from '@/utilities/getLocale'
+
+export async function Header() {
+  const locale = await getLocale()
+  const header = await payload.findGlobal({
+    slug: 'header',
+    locale,
+  })
+
+  return <HeaderClient data={header} />
+}
+```
+
