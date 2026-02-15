@@ -14,7 +14,7 @@ public/robots.txt
 public/sitemap*.xml
 
 src/payload-types.ts
-mindio-cms.db
+payload-i18n-template.db
 
 # Playwright
 node_modules/
